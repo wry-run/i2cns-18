@@ -13,7 +13,7 @@ if do_create_tables:
 
 	create_roles = """
 		CREATE TABLE IF NOT EXISTS roles (
-		name text NOT NULL UNIQUE,
+		name text NOT NULL,
 		permission text NOT NULL)"""
 
 	cursor.execute(create_roles)
@@ -21,8 +21,7 @@ if do_create_tables:
 	create_users = """
 		CREATE TABLE IF NOT EXISTS users (
 		name text NOT NULL UNIQUE,
-		role text NOT NULL,
-		FOREIGN KEY (role) REFERENCES roles (name))"""
+		role text NOT NULL)"""
 
 	cursor.execute(create_users)
 	
@@ -69,8 +68,6 @@ if do_create_content:
 	select_users = "select * from users"
 	cursor.execute(select_users)
 	print 'All users: {0}'.format(cursor.fetchall())
-
-# connection.close()
 
 
 
