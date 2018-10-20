@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href={{url_for('static', filename='style.css')}}>
+	{%block header %}{% endblock %}
+</head>
+<body>
+
+<div class="header">
+	<a href="#default" class="logo"><img src={{url_for('static', filename='logo.png')}} alt="logo" height=50px></a>
+	<div class="header-right">
+		
+		{% for key, value in header_dict.iteritems()  %}
+        <a 
+			{% if header_active==key %}
+				class="active"
+			{% endif %}
+			href={{value}}>{{key}}</a>
+        {% endfor %}
+	</div>
+</div>
+
+{% block content %} {% endblock %}
+
+
+</body>
+</html>

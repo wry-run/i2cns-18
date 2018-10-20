@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	
+{% endblock %}
+
+{% block content %}
+
+<h1>Private area</h1>
+
+<p> Username: {{current_user.name}}
+<p> User ID: {{current_user.id}}
+{% endblock %}
+
+{% block footer %}Confidential.{% endblock %}
