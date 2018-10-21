@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, session, request, redirect#, jsonify, session
+from flask import Flask, render_template, url_for, session, request, redirect
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from collections import OrderedDict
 from cryptography.hazmat.primitives import hashes
@@ -36,8 +36,22 @@ hash_function = hashes.SHA256()
 
 # pass a list of page names to html templates to automatically create links
 
-header_list=['Home', 'Login', 'Register', 'Logout']
-header_dict = OrderedDict()
+def make_headers():
+
+	if current_user.is_authenticated:
+
+		header_list = ['Home', 'Private', 'Logout']
+	else:
+
+		header_list = ['Home', 'Login', 'Register']
+
+	header_dict = OrderedDict()
+
+	header_urls = [url_for(j.lower()) for j in header_list]
+	for j in range(len(header_list)):
+		header_dict[header_list[j]] = header_urls[j]
+
+	return header_list, header_dict
 
 
 # user model
@@ -134,9 +148,7 @@ def login():
 
 		return redirect(url_for('private'))
 	
-	header_urls = [url_for(j.lower()) for j in header_list]
-	for j in range(len(header_list)):
-		header_dict[header_list[j]] = header_urls[j]
+	header_list, header_dict = make_headers()
 	return render_template('login_form.html', header_list=header_list, header_active='Login', header_dict=header_dict)
 
 
@@ -162,9 +174,7 @@ def register():
 			return redirect(url_for('private'))
 
 
-	header_urls = [url_for(j.lower()) for j in header_list]
-	for j in range(len(header_list)):
-		header_dict[header_list[j]] = header_urls[j]
+	header_list, header_dict = make_headers()
 
 	return render_template('register.html', header_list=header_list, header_active='Register', header_dict=header_dict)
 
@@ -174,9 +184,7 @@ def register():
 @app.route('/home/')
 def home():
 
-	header_urls = [url_for(j.lower()) for j in header_list]	
-	for j in range(len(header_list)):
-		header_dict[header_list[j]] = header_urls[j]
+	header_list, header_dict = make_headers()
 
 	return render_template('layout.html', header_list=header_list, header_active='Home', header_dict=header_dict)
 
@@ -185,8 +193,10 @@ def home():
 @app.route('/private/')
 @login_required
 def private():
-    
-    return render_template('private.html', header_list=header_list, header_active='Private', header_dict=header_dict)
+	
+	header_list, header_dict = make_headers()
+
+	return render_template('private.html', header_list=header_list, header_active='Private', header_dict=header_dict)
 
 
 @app.route('/logout/')
